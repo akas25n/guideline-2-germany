@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Setter
 @Getter
@@ -15,7 +18,11 @@ import lombok.Setter;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "user_id")
+    private long userId;
+
+    @Column(name = "user_role", nullable = false)
+    private String userRole;
 
     @Column(name="first_name", nullable = false)
     private String firstName;
@@ -28,4 +35,15 @@ public class User {
 
     @Column(name = "email_address",nullable = false, unique = true)
     private String emailAddress;
+
+    @Column(name = "user_password", nullable = false)
+    private String userPassword;
+
+    @ManyToMany
+    @JoinTable(
+            name="user_course_enrollment",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> enrolledCourses = new HashSet<>();
 }

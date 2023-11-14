@@ -1,7 +1,9 @@
 package com.guideline2germany.service;
 
+
 import com.guideline2germany.entity.User;
 import com.guideline2germany.exceptions.ResourceNotFoundException;
+
 import com.guideline2germany.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ public class UserService {
         newUser.setLastName(user.getLastName());
         newUser.setMobileNumber(user.getMobileNumber());
         newUser.setEmailAddress(user.getEmailAddress());
+        newUser.setUserPassword(user.getUserPassword());
 
         userRepository.save(newUser);
     }
