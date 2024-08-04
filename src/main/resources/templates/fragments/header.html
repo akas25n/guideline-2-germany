@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Header</title>
+</head>
+<body>
+<nav th:fragment="navbar" style="background: linear-gradient(to right, #005A2D, #C8102E, #000000, #C8102E, #FFCC00);" class="shadow-lg">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between">
+            <div class="flex space-x-7">
+                <div>
+                    <a href="/api/home" class="flex items-center py-4 px-2">
+                        <span class="font-semibold text-white text-lg">G2G App</span>
+                    </a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div th:if="${isAuthenticated}" class="flex items-center space-x-2">
+                    <!-- Profile Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <!-- User Name -->
+                    <span th:text="${firstName + ' ' + (lastName != null ? lastName : '')}" class="text-white"></span>
+                    <a href="/api/auth/logout" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-300">Logout</a>
+                </div>
+                <a th:unless="${isAuthenticated}" href="/api/auth/login" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-300">Login</a>
+            </div>
+        </div>
+    </div>
+</nav>
+</body>
+</html>
