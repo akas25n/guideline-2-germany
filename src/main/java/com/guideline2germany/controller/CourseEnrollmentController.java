@@ -1,3 +1,4 @@
+/*
 package com.guideline2germany.controller;
 
 import com.guideline2germany.service.CourseEnrollmentService;
@@ -16,3 +17,4 @@ public class CourseEnrollmentController {
 
     
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.guideline2germany.service;
 
 import com.guideline2germany.entity.Course;
@@ -48,3 +49,4 @@ public class CourseEnrollmentService {
 
 
 }
+*/

@@ -1,60 +1,60 @@
 package com.guideline2germany.service;
 
-
 import com.guideline2germany.entity.User;
-import com.guideline2germany.exceptions.ResourceNotFoundException;
-
 import com.guideline2germany.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> getAllUsers(){
+   /* @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                user.getRoles().stream()
+                        .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority(role.getName().name()))
+                        .collect(Collectors.toList())
+        );
+    }*/
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    }
+
+    public void registerNewUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Error: Email is already in use!");
+        }
+
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        System.out.println("Encoded password: " + encodedPassword); // Log the encoded password
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
         return userRepository.findAll();
-    }
-
-    public void createUser(User user){
-        User newUser = new User();
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-        newUser.setMobileNumber(user.getMobileNumber());
-        newUser.setEmailAddress(user.getEmailAddress());
-        newUser.setUserPassword(user.getUserPassword());
-
-        userRepository.save(newUser);
-    }
-
-    public User findUser(Long id) throws ResourceNotFoundException{
-        User user = userRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("User not found for this id :: " + id));
-        return user;
-    }
-
-    public User updateUserData(User newUser, long id) throws ResourceNotFoundException {
-        User currentUser = userRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("User not found for this id :: " + id));
-
-        currentUser.setFirstName(newUser.getFirstName());
-        currentUser.setLastName(newUser.getLastName());
-        currentUser.setMobileNumber(newUser.getMobileNumber());
-        currentUser.setEmailAddress(newUser.getEmailAddress());
-
-        User updatedUser = userRepository.save(currentUser);
-        return updatedUser;
-    }
-
-    public void deleteUser(long id) throws ResourceNotFoundException{
-        User user = userRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("User not found for this id :: " + id));
-        userRepository.delete(user);
     }
 }

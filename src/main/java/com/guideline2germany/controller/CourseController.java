@@ -1,3 +1,4 @@
+/*
 package com.guideline2germany.controller;
 
 import com.guideline2germany.entity.Course;
@@ -29,3 +30,4 @@ public class CourseController {
         courseService.createCourse(course);
     }
 }
+*/

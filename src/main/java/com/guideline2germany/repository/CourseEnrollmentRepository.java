@@ -1,3 +1,4 @@
+/*
 package com.guideline2germany.repository;
 
 import com.guideline2germany.entity.Course;
@@ -13,3 +14,4 @@ public interface CourseEnrollmentRepository extends JpaRepository<UserCourseEnro
     List<Course> findCoursesByUser (User user);
     UserCourseEnrollment findByUserAndCourse(User user, Course course);
 }
+*/

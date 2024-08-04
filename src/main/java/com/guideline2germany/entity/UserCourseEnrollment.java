@@ -1,3 +1,4 @@
+/*
 package com.guideline2germany.entity;
 
 import jakarta.persistence.*;
@@ -36,3 +37,4 @@ public class UserCourseEnrollment {
     @Column(name = "is_course_completed")
     private boolean isCourseCompleted;
 }
+*/
