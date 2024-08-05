@@ -2,42 +2,58 @@ package com.guideline2germany.service;
 
 import com.guideline2germany.entity.Banner;
 import com.guideline2germany.repository.BannerRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BannerService {
 
+    @Value("${banner.upload.directory}")
+    private String uploadDirectory;
     private BannerRepository bannerRepository;
 
     public BannerService(BannerRepository bannerRepository) {
         this.bannerRepository = bannerRepository;
     }
 
-   public Optional<Banner> getImage(){
-        return bannerRepository.findAll().stream().findFirst();
-   }
+    public Banner saveBanner(MultipartFile file) throws IOException {
 
-   @Transactional
-   public void saveOrUpdateImage(String imageUrl){
-        Optional<Banner> existingImage = bannerRepository.findAll().stream().findFirst();
+        // clean the directory
+        File directory = new File(uploadDirectory);
 
-        if (existingImage.isPresent()){
-            Banner bannerImage = existingImage.get();
-            bannerImage.setUrl(imageUrl);
-            bannerRepository.save(bannerImage);
+        if (directory.exists()) {
+            for (File f: directory.listFiles()) {
+                if (!f.isDirectory()) {
+                    f.delete();
+                }
+            }
         } else {
-            Banner bannerImage = new Banner();
-            bannerImage.setUrl(imageUrl);
-            bannerRepository.save(bannerImage);
+            directory.mkdirs();
         }
-   }
+        // save the image
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        Path path = Paths.get(uploadDirectory + fileName);
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-   @Transactional
-   public void deleteImage(){
+        // save banner entity
         bannerRepository.deleteAll();
-   }
+
+        Banner banner = new Banner();
+        banner.setUrl("/static/banner/" + fileName);
+        return bannerRepository.save(banner);
+    }
+
+    public List<Banner> getAllBanners() {
+       return bannerRepository.findAll();
+    }
 }
