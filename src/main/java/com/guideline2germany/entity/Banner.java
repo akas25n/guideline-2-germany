@@ -18,6 +18,6 @@ public class Banner {
     @Column(name = "image_id")
     private long id;
 
-    @Column(name = "image_url")
-    private String url;
+    @Column(name = "image_name")
+    private String imageName;
 }

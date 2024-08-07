@@ -49,11 +49,11 @@ public class BannerService {
         bannerRepository.deleteAll();
 
         Banner banner = new Banner();
-        banner.setUrl("/static/banner/" + fileName);
+        banner.setImageName(fileName);
         return bannerRepository.save(banner);
     }
 
-    public List<Banner> getAllBanners() {
-       return bannerRepository.findAll();
+    public Banner findFirstBanner() {
+        return bannerRepository.findFirstByOrderByIdAsc();
     }
 }
